@@ -1,0 +1,105 @@
+<!Doctype HTML>
+<html lang="de">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=UTF-8" />
+    <meta charset="UTF-8">
+    <title>Fliegerarzt Kartei</title>
+    <style type="text/css" media="screen">
+      .hidden {
+          display: none
+      }
+      #heading {
+       font-size: 2.25em;
+       margin-top: 0;
+       margin-bottom: .8888889em;
+       line-height: 1.1111111;
+       padding: 1rem;
+      }
+    </style>
+
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.11.1/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+
+  </head>
+  <body>
+    <section class="prose">
+      <h1 id="heading">Ärzte</h1>
+    </section>
+    <section class="flex gap-2 px-2">
+      <label class="input input-bordered flex items-center gap-2">
+        PLZ
+        <input type="text" name="zip" value=""/>
+      </label>
+      <label class="input input-bordered flex items-center gap-2">
+        Stadt
+        <input type="text" name="city" value="" />
+      </label>
+    </section>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Stadt</th>
+          <th>PLZ</th>
+          <th>Straße</th>
+          <th>Telefon</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for doctor in doctors %}
+        <tr class="hover" data-zip={{doctor.address.zip}} data-city={{doctor.address.city}}>
+          <td>{{doctor.name}}</td>
+          <td>{{doctor.address.city}}</td>
+          <td>{{doctor.address.zip}}</td>
+          <td>{{doctor.address.street}}</td>
+          <td>{{doctor.telefon}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+  <script type="text/javascript">
+    const zipInput = document.querySelector("input[name=zip]")
+    zipInput.addEventListener("keyup", (e) => {
+        const search = e.target.value
+        const rows = document.querySelectorAll("tr[data-zip]")
+
+        if (search.length === 0) {
+            for (row of rows) {
+                    row.className = ""
+            }
+            return
+        }
+        
+        for (row of rows) {
+            if (!row.getAttribute("data-zip").startsWith(search)) {
+                row.className = "hidden"
+            } else {
+                row.className = ""
+            }
+        }
+    })
+
+    const cityInput = document.querySelector("input[name=city]")
+    cityInput.addEventListener("keyup", (e) => {
+        const search = e.target.value
+        const rows = document.querySelectorAll("tr[data-city]")
+
+        if (search.length === 0) {
+            for (row of rows) {
+                    row.className = ""
+            }
+            return
+        }
+        
+        for (row of rows) {
+            if (!row.getAttribute("data-city").startsWith(search)) {
+                row.className = "hidden"
+            } else {
+                row.className = ""
+            }
+        }
+    })
+  </script>
+</html>
