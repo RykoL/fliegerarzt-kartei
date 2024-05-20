@@ -15,6 +15,7 @@ template = env.get_template("index.html")
 
 with open('doctors.json') as f:
     doctors = json.load(f)
+    federal_states = sorted({doctor['address']['federal_state'] for doctor in doctors})
 
 with open('index.html', 'w') as f:
-    f.write(template.render(doctors = doctors))
+    f.write(template.render(doctors = doctors, federal_states=federal_states))

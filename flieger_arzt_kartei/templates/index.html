@@ -35,6 +35,12 @@
         Stadt
         <input type="text" name="city" value="" />
       </label>
+      <select name="federalState" class="select select-bordered">
+        <option selected>Alle</option>
+        {% for federal_state in federal_states %}
+        <option value={{federal_state}}>{{ federal_state }}</option>
+        {% endfor %}
+      </select>
     </section>
     <table class="table">
       <thead>
@@ -43,16 +49,18 @@
           <th>Stadt</th>
           <th>PLZ</th>
           <th>Straße</th>
+          <th>Bundesland</th>
           <th>Telefon</th>
         </tr>
       </thead>
       <tbody>
         {% for doctor in doctors %}
-        <tr class="hover" data-zip={{doctor.address.zip}} data-city={{doctor.address.city}}>
+        <tr class="hover" data-zip={{doctor.address.zip}} data-city={{doctor.address.city}} data-federal-state={{doctor.address.federal_state}}>
           <td>{{doctor.name}}</td>
           <td>{{doctor.address.city}}</td>
           <td>{{doctor.address.zip}}</td>
           <td>{{doctor.address.street}}</td>
+          <td>{{doctor.address.federal_state}}</td>
           <td>{{doctor.telefon}}</td>
         </tr>
         {% endfor %}
@@ -60,46 +68,72 @@
     </table>
   </body>
   <script type="text/javascript">
+
+    function hideRow(row) {
+        row.className = "hidden"
+    }
+
+    function showRow(row) {
+        row.className = ""
+    }
+
+    function getAllDataRows() {
+        return document.querySelectorAll("tbody > tr")
+    }
+
+    function filterRows(rows, predicate) {
+        for (row of rows) {
+            row.className = predicate(row) ? "" : "hidden"
+        }
+    }
+    
     const zipInput = document.querySelector("input[name=zip]")
     zipInput.addEventListener("keyup", (e) => {
         const search = e.target.value
-        const rows = document.querySelectorAll("tr[data-zip]")
+        const rows = getAllDataRows()
 
         if (search.length === 0) {
             for (row of rows) {
-                    row.className = ""
+                showRow(row)
             }
             return
         }
-        
-        for (row of rows) {
-            if (!row.getAttribute("data-zip").startsWith(search)) {
-                row.className = "hidden"
-            } else {
-                row.className = ""
-            }
-        }
+
+        filterRows(rows, (row) => {
+            return row.getAttribute("data-zip").startsWith(search)
+        })
     })
 
     const cityInput = document.querySelector("input[name=city]")
     cityInput.addEventListener("keyup", (e) => {
         const search = e.target.value
-        const rows = document.querySelectorAll("tr[data-city]")
+        const rows = getAllDataRows()
 
         if (search.length === 0) {
             for (row of rows) {
-                    row.className = ""
+                showRow(row)
             }
             return
         }
-        
-        for (row of rows) {
-            if (!row.getAttribute("data-city").startsWith(search)) {
-                row.className = "hidden"
-            } else {
-                row.className = ""
+        filterRows(rows, (row) => {
+            return row.getAttribute("data-city").startsWith(search)
+        })
+    })
+
+    const federalStateInput = document.querySelector("select")
+    federalStateInput.addEventListener("change", (e) => {
+        const search = e.target.value
+        const rows = getAllDataRows()
+
+        if (search === "Alle") {
+            for (row of rows) {
+                showRow(row)
             }
+            return
         }
+        filterRows(rows, (row) => {
+            return row.getAttribute("data-federal-state").startsWith(search)
+        })
     })
   </script>
 </html>
