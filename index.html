@@ -3,7 +3,11 @@
   <head>
     <meta name="Content-Type" content="text/html; charset=UTF-8" />
     <meta charset="UTF-8">
+    <meta name="description" content="Liste der fliegerärztlichen Untersuchungsstelle">
     <title>Fliegerarzt Kartei</title>
+    <meta name='og:type' content='website' />
+    <meta name='og:title' content="Fliegerarzt Kartei" />
+    <meta name='og:description' content="Liste der fliegerärztlichen Untersuchungsstelle" />
     <style type="text/css" media="screen">
       .hidden {
           display: none
@@ -3250,13 +3254,17 @@
             row.className = predicate(row) ? "" : "hidden"
         }
     }
+
+    function isEmptyString(str) {
+        return str.length === 0
+    }
     
     const zipInput = document.querySelector("input[name=zip]")
     zipInput.addEventListener("keyup", (e) => {
         const search = e.target.value
         const rows = getAllDataRows()
 
-        if (search.length === 0) {
+        if (isEmptyString(search)) {
             for (row of rows) {
                 showRow(row)
             }
@@ -3273,7 +3281,7 @@
         const search = e.target.value
         const rows = getAllDataRows()
 
-        if (search.length === 0) {
+        if (isEmptyString(search)) {
             for (row of rows) {
                 showRow(row)
             }
