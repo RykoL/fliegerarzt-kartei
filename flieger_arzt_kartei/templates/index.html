@@ -19,6 +19,9 @@
        line-height: 1.1111111;
        padding: 1rem;
       }
+      .row {
+          content-visibility: hidden;
+      }
     </style>
 
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.11.1/dist/full.min.css" rel="stylesheet" type="text/css" />
@@ -59,7 +62,7 @@
       </thead>
       <tbody>
         {% for doctor in doctors %}
-        <tr class="hover" data-zip={{doctor.address.zip}} data-city={{doctor.address.city}} data-federal-state={{doctor.address.federal_state}}>
+        <tr class="hover row" data-zip={{doctor.address.zip}} data-city={{doctor.address.city}} data-federal-state={{doctor.address.federal_state}}>
           <td>{{doctor.name}}</td>
           <td>{{doctor.address.city}}</td>
           <td>{{doctor.address.zip}}</td>
