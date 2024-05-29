@@ -40,7 +40,7 @@
         <input type="text" name="city" value="" />
       </label>
       <select name="federalState" class="select select-bordered">
-        <option selected>Alle</option>
+        <option selected default>Alle</option>
         
         <option value=Baden-Württemberg>Baden-Württemberg</option>
         
@@ -3258,9 +3258,27 @@
     function isEmptyString(str) {
         return str.length === 0
     }
+
+    function resetOtherFilters(sourceElement, filterElems) {
+        filterElems.forEach(filterElement => {
+            if (filterElement !== sourceElement) {
+                if (filterElement instanceof HTMLSelectElement) {
+                    filterElement.value = "Alle"
+                } else {
+                  filterElement.value = filterElement.defaultValue
+                }
+            }
+        })
+    }
     
     const zipInput = document.querySelector("input[name=zip]")
+    const cityInput = document.querySelector("input[name=city]")
+    const federalStateInput = document.querySelector("select")
+
+    const filters = [zipInput, cityInput, federalStateInput]
+
     zipInput.addEventListener("keyup", (e) => {
+        resetOtherFilters(e.target, filters)
         const search = e.target.value
         const rows = getAllDataRows()
 
@@ -3276,8 +3294,8 @@
         })
     })
 
-    const cityInput = document.querySelector("input[name=city]")
     cityInput.addEventListener("keyup", (e) => {
+        resetOtherFilters(e.target, filters)
         const search = e.target.value
         const rows = getAllDataRows()
 
@@ -3288,12 +3306,12 @@
             return
         }
         filterRows(rows, (row) => {
-            return row.getAttribute("data-city").startsWith(search)
+            return row.getAttribute("data-city").toLowerCase().startsWith(search)
         })
     })
 
-    const federalStateInput = document.querySelector("select")
     federalStateInput.addEventListener("change", (e) => {
+        resetOtherFilters(e.target, filters)
         const search = e.target.value
         const rows = getAllDataRows()
 
